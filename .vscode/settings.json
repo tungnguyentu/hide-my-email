@@ -1,0 +1,13 @@
+{
+    "cSpell.words": [
+        "fastapi",
+        "gensalt",
+        "hashpw",
+        "jsonable",
+        "ondelete",
+        "passlib",
+        "pydantic",
+        "sessionmaker",
+        "sqlalchemy"
+    ]
+}
