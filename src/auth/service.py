@@ -25,7 +25,7 @@ async def get_jwt_user(
     )
     try:
         payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALG])
-    except jwt.PyJWTError:
+    except Exception:
         raise credentials_exception
 
     email: str = payload.get("sub")
