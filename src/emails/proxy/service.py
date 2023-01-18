@@ -1,11 +1,13 @@
 import string
 from random import choice
 from typing import List, Optional
+
 from pydantic import EmailStr
-from src.emails.proxy.models import VirtualUser
-from src.emails.models import VirtualDomain
-from src.emails.proxy.schemas import ProxiesGenerated, ProxyGet, ProxyCreate
+
 from src.config import Settings as settings
+from src.emails.models import VirtualDomain
+from src.emails.proxy.models import VirtualUser
+from src.emails.proxy.schemas import ProxiesGenerated, ProxyCreate, ProxyGet
 
 
 def choice_random_email(db, account_id) -> Optional[ProxiesGenerated]:
@@ -46,7 +48,7 @@ def generate_email(db, domain, account_id):
         domain_id=domain.id,
         email=email_address,
         account_id=account_id,
-        password="HaNoi2018"
+        password=settings.DEFAULT_RANDOM_EMAIL_PASS
     )
     db.add(proxy)
     db.commit()

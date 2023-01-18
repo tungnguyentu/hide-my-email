@@ -19,16 +19,14 @@ def get_by_email(db: Session, email: EmailStr):
     return db.query(Account).filter(Account.email == email).first()
 
 
-def create(*, db: Session, user_in: AccountRegister) -> Account:
-    user = get_by_email(db, user_in.email)
+def create(*, db: Session, email, password) -> Account:
+    user = get_by_email(db, email)
     if user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ErrorCode.REGISTER_USER_ALREADY_EXISTS,
         )
-    plain_password = user_in.password.get_secret_value()
-    hashed_password = hash_password(plain_password)
-    user = Account(**user_in.dict(exclude={"password"}), password=hashed_password)
+    user = Account(email=email, password=password)
 
     db.add(user)
     db.commit()
