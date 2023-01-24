@@ -29,6 +29,16 @@ def get_all(db: Session = Depends(get_db), account: Account = Depends(get_jwt_us
     return service.get_forwards(db, account.id)
 
 
+@router.get("/active", response_model=List[ForwardsResponse], status_code=status.HTTP_200_OK, dependencies=[Depends(get_jwt_user_active)])
+def get_forwards_active(db: Session = Depends(get_db), account: Account = Depends(get_jwt_user_active)):
+    return service.get_forwards_by_status(db, account.id, True)
+
+
+@router.get("/deactivate", response_model=List[ForwardsResponse], status_code=status.HTTP_200_OK, dependencies=[Depends(get_jwt_user_active)])
+def get_forwards_deactivate(db: Session = Depends(get_db), account: Account = Depends(get_jwt_user_active)):
+    return service.get_forwards_by_status(db, account.id, False)
+
+
 @router.get("/{forward_id}", response_model=ForwardResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(get_jwt_user_active)])
 def get(forward_id: str, db: Session = Depends(get_db), account: Account = Depends(get_jwt_user_active)):
     alias = service.get_by_id(db, forward_id=forward_id, account=account)

@@ -20,14 +20,7 @@ def get_by_email(db: Session, email: EmailStr):
 
 
 def create(*, db: Session, email, password) -> Account:
-    user = get_by_email(db, email)
-    if user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=ErrorCode.REGISTER_USER_ALREADY_EXISTS,
-        )
     user = Account(email=email, password=password)
-
     db.add(user)
     db.commit()
     db.refresh(user)

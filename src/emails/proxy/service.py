@@ -1,3 +1,4 @@
+import random
 import string
 from random import choice
 from typing import List, Optional
@@ -7,7 +8,7 @@ from pydantic import EmailStr
 from src.config import Settings as settings
 from src.emails.models import VirtualDomain
 from src.emails.proxy.models import VirtualUser
-from src.emails.proxy.schemas import ProxiesGenerated, ProxyCreate, ProxyGet
+from src.emails.proxy.schemas import ProxiesGenerated, ProxyCreate, ProxyGet, PasswordGenerated
 
 
 def choice_random_email(db, account_id) -> Optional[ProxiesGenerated]:
@@ -68,3 +69,8 @@ def get_proxy(db, account_id: str, email: EmailStr) -> VirtualUser:
         VirtualUser.email == email
     ).first()
     return proxy
+
+
+def generate_password():
+    password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=14))
+    return PasswordGenerated(password=password)

@@ -1,9 +1,13 @@
-from typing import Optional, List
+import random
+import string
+from typing import List, Optional
+
 from fastapi.encoders import jsonable_encoder
+
 from src.auth.models import Account
 from src.emails.forwards.models import VirtualAliases
-from src.emails.models import VirtualDomain
 from src.emails.forwards.schemas import ForwardCreate, ForwardGet, ForwardUpdate
+from src.emails.models import VirtualDomain
 from src.emails.proxy.models import VirtualUser
 
 
@@ -14,9 +18,11 @@ def create(db, forward_in: ForwardCreate, account_id: str) -> Optional[VirtualAl
         VirtualUser.email==forward_in.source
     ).first()
     setattr(proxy, "used", True)
+    password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=14))
     forward = VirtualAliases(
         domain_id=domain.id,
         account_id=account_id,
+        password=password,
         source=forward_in.source,
         destination=forward_in.destination,
         label=forward_in.label,
@@ -31,6 +37,14 @@ def create(db, forward_in: ForwardCreate, account_id: str) -> Optional[VirtualAl
 def get_forwards(db, account_id: str) -> Optional[List[VirtualAliases]]:
     forwards = db.query(VirtualAliases).filter(
         VirtualAliases.account_id==account_id
+    ).all()
+    return forwards
+
+
+def get_forwards_by_status(db, account_id: str, is_active: bool) -> Optional[List[VirtualAliases]]:
+    forwards = db.query(VirtualAliases).filter(
+        VirtualAliases.account_id==account_id,
+        VirtualAliases.is_active==is_active
     ).all()
     return forwards
 

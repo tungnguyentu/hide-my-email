@@ -90,7 +90,7 @@ def send_email(token: str, recipient: str):
     subject = "Xác minh email đăng ký Hide My Email"
 
     # create the HTML template for the body of the email
-    verify_url = f"{settings.HOST}/verify?token={token}"
+    verify_url = f"{settings.HOST}/auth/verify?token={token}"
     template = """
     <!DOCTYPE html>
     <html>
@@ -121,6 +121,11 @@ def send_email(token: str, recipient: str):
                 font-size: 16px;
                 margin-top: 20px;
             }
+            a:link {
+         color: white;
+         background-color: transparent;
+         text-decoration: none;
+      }
         </style>
         <title>Verification Email</title>
     </head>
@@ -132,7 +137,7 @@ def send_email(token: str, recipient: str):
                         <h1>Chào mừng đến với Hide My Email!</h1>
                         <p>Cảm ơn bạn đã đăng ký dịch vụ.</p>
                         <p>Để hoàn tất quá trình đăng ký, vui lòng nhấn vào link xác minh bên dưới:</p>
-                        <a href='"""+f"{verify_url}"+"""' class="btn btn-success" >Xác minh Email</a>
+                        <a href='"""+f"{verify_url}"+"""' class="btn btn-success" style="color: white" >Xác minh địa chỉ email</a>
                     </div>
                 </div>
             </div>
