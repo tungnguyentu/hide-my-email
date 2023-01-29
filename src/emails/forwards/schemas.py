@@ -7,7 +7,7 @@ from src.models import OrmBaseModel
 class ForwardCreate(OrmBaseModel):
     source: EmailStr
     destination: EmailStr
-    password: Optional[str] = None
+    password: Optional[str] = ""
     label: str
     note: Optional[str] = None
 

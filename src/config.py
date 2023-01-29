@@ -17,3 +17,4 @@ class Settings:
     HOST = env.str("HOST")
     SECRET_KEY_SIGNUP = env.str("SECRET_KEY_SIGNUP")
     DEFAULT_RANDOM_EMAIL_PASS = env.str("DEFAULT_RANDOM_EMAIL_PASS")
+    TEMPLATE_DIR = env.str("TEMPLATE_DIR")

@@ -18,13 +18,16 @@ from .schemas import AccountLogin, AccountRegister, AccountResponse, Token
 from .security import create_access_token, hash_password
 
 router = APIRouter()
-router.mount("/static", StaticFiles(directory="/home/tungnt/Documents/hide-my-email/src/auth/static"), name="static")
+router.mount(
+    "/static", StaticFiles(directory=f"{settings.TEMPLATE_DIR}/static"), name="static"
+)
 
-templates = Jinja2Templates(directory="/home/tungnt/Documents/hide-my-email/src/auth/templates")
+templates = Jinja2Templates(directory="{settings.TEMPLATE_DIR}/templates")
+
 
 @router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
+async def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
     user_in = AccountLogin(email=form_data.username, password=form_data.password)
     user = service.authenticate(db=db, user_in=user_in)
@@ -42,7 +45,11 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.post("/register", response_model=Token)
-async def register(background_tasks: BackgroundTasks, user_in: AccountRegister, db: Session = Depends(get_db)):
+async def register(
+    background_tasks: BackgroundTasks,
+    user_in: AccountRegister,
+    db: Session = Depends(get_db),
+):
     user = users.get_by_email(db, user_in.email)
     if user:
         raise HTTPException(
@@ -56,10 +63,13 @@ async def register(background_tasks: BackgroundTasks, user_in: AccountRegister, 
         data={
             "sub": user_in.email,
             "action": "signup",
-            "pa": f"{hashed_password}{settings.SECRET_KEY_SIGNUP}"
-        }, expires_delta=access_token_expires
+            "pa": f"{hashed_password}{settings.SECRET_KEY_SIGNUP}",
+        },
+        expires_delta=access_token_expires,
     )
-    background_tasks.add_task(service.send_email, recipient=user_in.email, token=access_token)
+    background_tasks.add_task(
+        service.send_email, recipient=user_in.email, token=access_token
+    )
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -72,6 +82,8 @@ async def verify(request: Request, token: str, db: Session = Depends(get_db)):
             raise Exception
         password = password.replace(settings.SECRET_KEY_SIGNUP, "")
         users.create(db=db, email=email, password=password)
-        return templates.TemplateResponse("signup-success.html", context={"request": request, "email": email})
+        return templates.TemplateResponse(
+            "signup-success.html", context={"request": request, "email": email}
+        )
     except Exception:
         return templates.TemplateResponse("index.html", context={"request": request})

@@ -18,11 +18,10 @@ def create(db, forward_in: ForwardCreate, account_id: str) -> Optional[VirtualAl
         VirtualUser.email==forward_in.source
     ).first()
     setattr(proxy, "used", True)
-    password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=14))
     forward = VirtualAliases(
         domain_id=domain.id,
         account_id=account_id,
-        password=password,
+        password=forward_in.password,
         source=forward_in.source,
         destination=forward_in.destination,
         label=forward_in.label,
