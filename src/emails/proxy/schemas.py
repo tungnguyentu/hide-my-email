@@ -19,6 +19,9 @@ class ProxyGet(OrmBaseModel):
 class ProxiesGenerated(OrmBaseModel):
     email: EmailStr
 
+class PasswordGenerated(OrmBaseModel):
+    password: str
+
 
 class ProxyInDBBase(ProxyBase):
     id: str

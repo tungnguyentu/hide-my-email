@@ -7,6 +7,7 @@ from src.models import OrmBaseModel
 class ForwardCreate(OrmBaseModel):
     source: EmailStr
     destination: EmailStr
+    password: Optional[str] = ""
     label: str
     note: Optional[str] = None
 
@@ -16,7 +17,7 @@ class ForwardGet(OrmBaseModel):
 
 
 class ForwardUpdate(OrmBaseModel):
-    destination: EmailStr
+    password: Optional[str]
     label: Optional[str]
     note: Optional[str]
 
@@ -26,11 +27,14 @@ class ForwardsResponse(OrmBaseModel):
     source: EmailStr
     label: str
     is_active: bool
+    destination: str
+    password: str
 
 
 class ForwardResponse(OrmBaseModel):
     id: str
     source: EmailStr
+    password: str
     destination: EmailStr
     label: str
     note: str

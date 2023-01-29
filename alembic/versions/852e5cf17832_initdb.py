@@ -1,8 +1,8 @@
-"""init db
+"""initdb
 
-Revision ID: d31ae46188d3
+Revision ID: 852e5cf17832
 Revises: 
-Create Date: 2022-10-08 11:11:04.291232
+Create Date: 2023-01-26 16:23:49.420798
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd31ae46188d3'
+revision = '852e5cf17832'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade() -> None:
     op.create_table('accounts',
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.Column('id', sa.String(length=36), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password', sa.String(length=106), nullable=False),
@@ -40,8 +41,11 @@ def upgrade() -> None:
     sa.Column('id', sa.String(length=36), nullable=False),
     sa.Column('domain_id', sa.String(length=36), nullable=False),
     sa.Column('source', sa.String(length=100), nullable=False),
+    sa.Column('password', sa.String(length=100), nullable=False),
     sa.Column('destination', sa.String(length=100), nullable=False),
     sa.Column('account_id', sa.String(length=36), nullable=False),
+    sa.Column('label', sa.String(length=200), nullable=False),
+    sa.Column('note', sa.String(length=1000), nullable=False),
     sa.ForeignKeyConstraint(['account_id'], ['accounts.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['domain_id'], ['virtual_domains.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -56,6 +60,7 @@ def upgrade() -> None:
     sa.Column('account_id', sa.String(length=36), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password', sa.String(length=106), nullable=False),
+    sa.Column('used', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['account_id'], ['accounts.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['domain_id'], ['virtual_domains.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
