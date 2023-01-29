@@ -8,6 +8,7 @@
         "passlib",
         "pydantic",
         "sessionmaker",
-        "sqlalchemy"
+        "sqlalchemy",
+        "templating"
     ]
 }
